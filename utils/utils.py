@@ -2,6 +2,7 @@
 import numpy as np
 import cv2
 from PIL import Image
+import os 
 
 def add_logo(img_path, logo_path):
     # Open the main image and the logo image
@@ -42,47 +43,40 @@ def add_logo(img_path, logo_path):
     # convert the array to an image
     img = Image.fromarray(img)
     
-    # save the image
-    extensions = ['.png', '.jpg', '.jpeg']
+    # Save the image
     result_path = img_path.replace('photos', 'results')
-    for ext in extensions:
-        if img_path.endswith(ext):
-            result_path = result_path.replace(ext, '_watermarked.png')
-            break 
+    result_path = os.path.splitext(result_path)[0] + '_watermarked.png'
     img.save(result_path)
+
     return result_path
 
-def add_text(img_path, text):
 
+def add_text(img_path, text):
+    print(f"Loading image from: {img_path}")
     img = Image.open(img_path).convert('RGB')
-    img = img.resize((500,600))
+    img = img.resize((500, 600))
     img = np.array(img)
 
-    # extract the shape of the image
     img_height, img_width, _ = img.shape
+    print(f"Image dimensions: {img_width}x{img_height}")
 
-    # define the font and the text size
     font = cv2.FONT_HERSHEY_SIMPLEX
     font_scale = 1
     font_thickness = 2
     text_size = cv2.getTextSize(text, font, font_scale, font_thickness)[0]
+    print(f"Text size: {text_size}")
 
-    # calculate the top left corner of the text
     text_x = (img_width - text_size[0]) // 2
     text_y = (img_height + text_size[1]) // 2
 
-    # draw the text on the image
-    img = cv2.putText(img, text, (text_x, text_y), font, font_scale, (255, 255, 255), font_thickness, cv2.LINE_AA)
-    
-    # convert the array to an image
-    img = Image.fromarray(img)
+    print(f"Text position: {text_x}, {text_y}")
+    cv2.putText(img, text, (text_x, text_y), font, font_scale, (255, 255, 255), font_thickness)
 
-    # save the image
-    extensions = ['.png', '.jpg', '.jpeg']
+    img = Image.fromarray(img)
     result_path = img_path.replace('photos', 'results')
-    for ext in extensions:
-        if img_path.endswith(ext):
-            result_path = result_path.replace(ext, '_watermarked.png')
-            break 
+    result_path = os.path.splitext(result_path)[0] + '_watermarked.png'
+    
+    print(f"Saving image to: {result_path}")
     img.save(result_path)
+    
     return result_path
