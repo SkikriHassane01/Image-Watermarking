@@ -63,25 +63,34 @@ def index():
                     flash('Logo watermark added successfully!')
 
             elif option == 'text':
-                if 'file1' not in request.files or 'text' not in request.form:
+                if 'file' not in request.files or 'text' not in request.form:
                     flash('No file part or text provided')
                     return redirect(request.url)
 
-                file1 = request.files['file1']
+                file = request.files['file']
                 text = request.form['text']
 
-                if file1.filename == '':
+                if file.filename == '':
                     flash('No selected file')
                     return redirect(request.url)
 
-                if file1 and allowed_file(file1.filename):
-                    filename1 = secure_filename(file1.filename)
-                    filepath1 = os.path.join(current_app.config['UPLOAD_FOLDER'], 'photos', filename1)
-                    file1.save(filepath1)
+                if file and allowed_file(file.filename):
+                    photo_folder = os.path.join(current_app.config['UPLOAD_FOLDER'], 'photos')
+                    result_folder = os.path.join(current_app.config['UPLOAD_FOLDER'], 'results')
+
+                    # Create the folders if they don't exist
+                    os.makedirs(photo_folder, exist_ok=True)
+                    os.makedirs(result_folder, exist_ok=True)
+
+                    filename = secure_filename(file.filename)
+                    filepath = os.path.join(photo_folder, filename)
+                    file.save(filepath)
 
                     # Apply text watermarking
-                    result_photo_path = add_text(filepath1, text)
-                    flash('Text watermark added successfully!')
+                    result_photo_path = add_text(filepath, text)
                     result_filename = os.path.basename(result_photo_path)
+                    flash('Text watermark added successfully!')
+            print("Final result filename:", result_filename)
             return render_template('index.html', result_filename=result_filename)
-    return render_template('index.html')
+    
+    return render_template('index.html',result_filename = result_filename)
