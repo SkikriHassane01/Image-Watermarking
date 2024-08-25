@@ -21,3 +21,5 @@ we will create the flask app that will take the image and the watermark image an
 
 ## **Step 5: Deploy the app on heroku**
 we will deploy the app on heroku.
+
+![image](https://github.com/user-attachments/assets/fa3e3600-24ca-4743-8fa0-450cf3a9243f)
