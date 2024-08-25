@@ -3,8 +3,8 @@ from os import environ, path
 basedir = path.abspath(path.dirname(__file__)) # get the current directory of the file for example if the file is in /home/user/Desktop/file.py it will return /home/user/Desktop 
 
 class Config:
-    SECRET_KEY = environ.get('SECRET_KEY')
-    UPLOAD_FOLDER = path.join(basedir, 'uploads')
+    SECRET_KEY  = "watermarking"
+    UPLOAD_FOLDER = "app/static/uploads"
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
     SECTION_COOKIE_SECURE = True
     DEBUG = False
